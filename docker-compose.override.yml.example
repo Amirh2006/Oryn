@@ -1,0 +1,15 @@
+# Example docker-compose.override.yml for local development
+# Copy to docker-compose.override.yml if needed
+version: '3.8'
+
+services:
+  backend:
+    volumes:
+      - ./backend:/app
+    environment:
+      APP_ENV: development
+      LOG_LEVEL: debug
+
+  frontend:
+    ports:
+      - "5173:80"

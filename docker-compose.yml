@@ -1,0 +1,103 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: oryn_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-oryn}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-oryn_dev_secret}
+      POSTGRES_DB: ${POSTGRES_DB:-oryn_db}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-oryn} -d ${POSTGRES_DB:-oryn_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - oryn_network
+
+  redis:
+    image: redis:7-alpine
+    container_name: oryn_redis
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    command: ["redis-server", "--appendonly", "yes"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - oryn_network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: oryn_backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "${SERVER_PORT:-8080}:8080"
+    environment:
+      APP_ENV: ${APP_ENV:-production}
+      SERVER_PORT: 8080
+      SERVER_HOST: 0.0.0.0
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:5173,http://localhost:3000}
+      DATABASE_URL: postgres://${POSTGRES_USER:-oryn}:${POSTGRES_PASSWORD:-oryn_dev_secret}@postgres:5432/${POSTGRES_DB:-oryn_db}?sslmode=disable
+      REDIS_ADDR: redis:6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-}
+      JWT_SECRET: ${JWT_SECRET:-oryn_dev_secret_key_minimum_32_characters_long_for_security}
+      JWT_ACCESS_EXPIRY: ${JWT_ACCESS_EXPIRY:-15m}
+      JWT_REFRESH_EXPIRY: ${JWT_REFRESH_EXPIRY:-168h}
+      TMDB_API_KEY: ${TMDB_API_KEY:-}
+      TMDB_BASE_URL: ${TMDB_BASE_URL:-https://api.themoviedb.org/3}
+      TMDB_IMAGE_BASE_URL: ${TMDB_IMAGE_BASE_URL:-https://image.tmdb.org/t/p}
+      OUTBOUND_PROXY_URL: ${OUTBOUND_PROXY_URL:-}
+      CLOUDFLARE_ACCOUNT_ID: ${CLOUDFLARE_ACCOUNT_ID:-}
+      CLOUDFLARE_API_TOKEN: ${CLOUDFLARE_API_TOKEN:-}
+      AI_MAIN_MODEL: ${AI_MAIN_MODEL:-@cf/meta/llama-3.1-8b-instruct}
+      AI_LIGHT_MODEL: ${AI_LIGHT_MODEL:-@cf/meta/llama-3.1-8b-instruct-fast}
+      AI_DAILY_NEURON_BUDGET: ${AI_DAILY_NEURON_BUDGET:-10000}
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      - oryn_network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: oryn_frontend
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "3000:80"
+    networks:
+      - oryn_network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  oryn_network:
+    driver: bridge
