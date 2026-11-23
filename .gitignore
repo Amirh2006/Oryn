@@ -16,11 +16,25 @@ coverage.html
 node_modules/
 vendor/
 
-# Environment files
-.env
-.env.local
-.env.*.local
+# Environment & Secret Files (STRICTLY PROHIBITED FROM PUBLIC REPO)
+.env*
 !.env.example
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+*.cer
+*.jks
+*.keystore
+id_rsa*
+id_ed25519*
+*credentials*.json
+*service_account*.json
+*.sqlite
+*.sqlite3
+*.db
+*.dump
 docker-compose.override.yml
 
 # IDE & Editor artifacts
