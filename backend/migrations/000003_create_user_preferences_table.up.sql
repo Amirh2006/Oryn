@@ -1,0 +1,10 @@
+CREATE TABLE IF NOT EXISTS user_preferences (
+    user_id UUID PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+    language VARCHAR(10) NOT NULL DEFAULT 'en',
+    theme VARCHAR(10) NOT NULL DEFAULT 'dark',
+    favorite_genres JSONB NOT NULL DEFAULT '[]'::jsonb,
+    preferred_rating_min NUMERIC(3,1) NOT NULL DEFAULT 0.0,
+    max_runtime INT NOT NULL DEFAULT 0,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
