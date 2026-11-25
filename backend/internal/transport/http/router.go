@@ -11,6 +11,7 @@ import (
 type RouterConfig struct {
 	Config        *config.Config
 	HealthHandler *handlers.HealthHandler
+	MediaHandler  *handlers.MediaHandler
 }
 
 // SetupRouter initializes the Gin engine with all global middlewares and routes
@@ -40,6 +41,20 @@ func SetupRouter(cfg *RouterConfig) *gin.Engine {
 		apiV1.GET("/ping", func(c *gin.Context) {
 			c.JSON(200, gin.H{"message": "pong"})
 		})
+
+		if cfg.MediaHandler != nil {
+			media := apiV1.Group("/media")
+			{
+				media.GET("/trending", cfg.MediaHandler.GetTrending)
+				media.GET("/popular", cfg.MediaHandler.GetPopular)
+				media.GET("/top-rated", cfg.MediaHandler.GetTopRated)
+				media.GET("/search", cfg.MediaHandler.Search)
+				media.GET("/discover", cfg.MediaHandler.Discover)
+				media.GET("/genres", cfg.MediaHandler.GetGenres)
+				media.GET("/:type/:id", cfg.MediaHandler.GetDetails)
+				media.GET("/:type/:id/similar", cfg.MediaHandler.GetSimilar)
+			}
+		}
 	}
 
 	return r
