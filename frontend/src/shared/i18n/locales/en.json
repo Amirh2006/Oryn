@@ -1,0 +1,66 @@
+{
+  "brand": {
+    "name": "Oryn",
+    "tagline": "Discover Beyond the Screen"
+  },
+  "nav": {
+    "home": "Home",
+    "explore": "Explore & Search",
+    "assistant": "AI Assistant",
+    "collection": "My Collection",
+    "profile": "Profile & Settings"
+  },
+  "search": {
+    "placeholder": "Search movies, series, directors, actors...",
+    "quickSearch": "Quick Search",
+    "filters": "Filters",
+    "clearFilters": "Clear Filters"
+  },
+  "hero": {
+    "badge": "Next-Gen AI Discovery",
+    "title": "Uncover Stories Tailored to Your Mind",
+    "description": "Navigate through cinema's finest creations with high-precision multi-criteria filtering, deep character similarity matching, and a context-aware conversational AI assistant.",
+    "ctaExplore": "Explore Catalog",
+    "ctaAssistant": "Ask AI Assistant"
+  },
+  "sections": {
+    "trending": "Trending This Week",
+    "topRated": "Critically Acclaimed",
+    "popularMovies": "Popular Movies",
+    "popularSeries": "Popular TV Series",
+    "recommended": "Recommended For You",
+    "viewAll": "View All"
+  },
+  "theme": {
+    "dark": "Dark Mode",
+    "light": "Light Mode",
+    "toggle": "Toggle Theme"
+  },
+  "language": {
+    "english": "English",
+    "persian": "فارسی",
+    "switch": "Change Language"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "retry": "Try Again",
+    "movie": "Movie",
+    "tv": "TV Series",
+    "rating": "Rating",
+    "year": "Year",
+    "duration": "Duration",
+    "min": "min",
+    "seasons": "Seasons",
+    "episodes": "Episodes",
+    "save": "Save",
+    "cancel": "Cancel",
+    "addToWatchlist": "Add to Watchlist",
+    "addedToWatchlist": "In Watchlist"
+  },
+  "footer": {
+    "copyright": "© 2026 Oryn. All rights reserved.",
+    "disclaimer": "Powered by TMDB and Cloudflare Workers AI. Non-commercial demonstration.",
+    "status": "System Operational"
+  }
+}

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Oryn — Discover Beyond the Screen</title>
+    <!-- Anti-FOUC Theme & Direction Init Script -->
+    <script>
+      (function() {
+        // Theme initialization
+        try {
+          const storedTheme = localStorage.getItem('oryn_theme');
+          const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          if (storedTheme === 'dark' || (!storedTheme && systemDark)) {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+        } catch (e) {}
+
+        // Language & Direction initialization
+        try {
+          const storedLang = localStorage.getItem('oryn_lang') || 'en';
+          document.documentElement.setAttribute('lang', storedLang);
+          document.documentElement.setAttribute('dir', storedLang === 'fa' ? 'rtl' : 'ltr');
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body class="bg-light-bg text-light-textPrimary dark:bg-cinema-950 dark:text-gray-100 min-h-screen antialiased selection:bg-oryn-500 selection:text-white transition-colors duration-200">
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
